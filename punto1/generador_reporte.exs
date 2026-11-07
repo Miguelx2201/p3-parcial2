@@ -62,12 +62,25 @@ defmodule GeneradorReporte do
   defp formatear_movimientos(movs_ciudad, _total) do
     "Movimientos:\n" <>
       Enum.map_join(movs_ciudad, "\n", fn m ->
-        " - #{m.codigo}: #{Time.to_string(m.horaInicio)} a #{Time.to_string(m.horaFinal)} | Magnitud: #{m.magnitud} | Profundidad: #{m.profundidad} km"
+        " - #{m.codigo}: Desde las #{Time.to_string(m.horaInicio)} hasta las #{Time.to_string(m.horaFinal)} | Magnitud: #{m.magnitud} | Profundidad: #{m.profundidad} km"
       end)
   end
 
    # funciones auxiliares para mostrar el codigo y magnitud, o no aplica
   defp formatear_maximo("No aplica"), do: "No aplica"
   defp formatear_maximo(sismo), do: "#{sismo.codigo} (#{sismo.magnitud})"
+
+   defp guardar_archivo(contenido) do
+    #ruta en la que se guarda el reporte
+    ruta = "resources/reporte_sismos.txt"
+
+    # reemplaza el reporte anterior o si falla la escritura, informa el error en consola
+    case File.write(ruta, contenido) do
+      :ok ->
+       Util.mostrar_mensaje("\nReporte guardado exitosamente en #{ruta}")
+      {:error, _razon} ->
+       Util.mostrar_mensaje("\nError: No se pudo escribir el reporte en consola hacia #{ruta}")
+    end
+  end
 
 end
