@@ -31,4 +31,43 @@ defmodule GeneradorReporte do
     guardar_archivo(texto_final)
   end
 
+  # funcion principal que genera el texto por ciudad
+  defp generar_texto(ciudades, movs_por_ciudad) do
+    Enum.map_join(ciudades, "\n--------------------------\n", fn ciudad ->
+      #obtiene los movimientos que corresponden al id de la ciudad
+      movs_ciudad = Map.get(movs_por_ciudad, ciudad.id, [])
+      formatear_ciudad(ciudad, movs_ciudad)
+    end)
+  end
+
+  # estructura el texto de una ciudad
+  defp formatear_ciudad(ciudad, movs_ciudad) do
+    {total_sismos, max_sismo, prom_profundidad} = CalculadorSismos.calcular(movs_ciudad)
+
+    """
+    Ciudad: #{ciudad.nombre} | Habitantes: #{ciudad.habitantes}
+    #{formatear_movimientos(movs_ciudad, total_sismos)}
+    Total movimientos: #{total_sismos}
+    Movimiento de mayor magnitud: #{formatear_maximo(max_sismo)}
+    Profundidad promedio: #{prom_profundidad} km\
+    """
+  end
+
+  # si el total es 0 se devuelve el texto directamente
+  defp formatear_movimientos(_movs_ciudad, 0) do
+    "No hay movimientos registrados"
+  end
+
+  # si hay movimientos se formatean
+  defp formatear_movimientos(movs_ciudad, _total) do
+    "Movimientos:\n" <>
+      Enum.map_join(movs_ciudad, "\n", fn m ->
+        " - #{m.codigo}: #{Time.to_string(m.horaInicio)} a #{Time.to_string(m.horaFinal)} | Magnitud: #{m.magnitud} | Profundidad: #{m.profundidad} km"
+      end)
+  end
+
+   # funciones auxiliares para mostrar el codigo y magnitud, o no aplica
+  defp formatear_maximo("No aplica"), do: "No aplica"
+  defp formatear_maximo(sismo), do: "#{sismo.codigo} (#{sismo.magnitud})"
+
 end
