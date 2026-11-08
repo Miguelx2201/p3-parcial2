@@ -50,3 +50,4 @@ defmodule CoordinadorLocal do
     end
   end
 end
+CoordinadorLocal.iniciar_reporte()
