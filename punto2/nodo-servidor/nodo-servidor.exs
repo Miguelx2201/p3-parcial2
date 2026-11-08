@@ -25,7 +25,7 @@ defmodule NodoServidor do
   defp procesar_mensaje(:fin), do: :fin
   defp procesar_mensaje({:reporte_ciudad, id_ciudad}), do: String.upcase("REPORTE CIUDAD #{id_ciudad}")
   defp procesar_mensaje(:reporte_general), do: String.downcase("REPORTE GENERAL")
-  defp procesar_mensaje(mensaje), do: IO.puts("hola")#"El mensaje \"#{IO.inspect(mensaje)}\" es desconocido."
+  defp procesar_mensaje(mensaje), do: "El mensaje \"#{inspect(mensaje)}\" es desconocido."
 end
 
 NodoServidor.main()
