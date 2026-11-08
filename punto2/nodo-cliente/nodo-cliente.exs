@@ -9,11 +9,11 @@ defmodule NodoCliente do
   @servicio_remoto {:servicio_sismos, @nodo_remoto}
   # Lista de mensajes a procesar
   @mensajes [
-    {@servicio_local, {:reporte_ciudad, 01}},
-    {@servicio_local, {:reporte_ciudad, 03}},
-    {@servicio_local, {:reporte_ciudad, 04}},
-    {@servicio_local, :reporte_general},
-    {@servicio_local, :fin},
+    {:reporte_ciudad, 01},
+    {:reporte_ciudad, 03},
+    {:reporte_ciudad, 04},
+    :reporte_general,
+    :fin,
   ]
 
   def main() do
