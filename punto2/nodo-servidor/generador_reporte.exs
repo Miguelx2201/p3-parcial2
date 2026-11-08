@@ -24,11 +24,12 @@ defmodule GeneradorReporte do
                   "Archivo movimientos: #{total_rechazos_mov}\n"
 
     # muestra el reporte en consola
-    Util.mostrar_mensaje("REPORTE POR CIUDAD------------------ \n")
-    Util.mostrar_mensaje(texto_final)
+    Util.mostrar_mensaje("Reporte general generado correctamente.")
+
 
     # el reporte de consola debe guardarse en resources/reporte_sismos.txt
     guardar_archivo(texto_final)
+    texto_final
   end
 
   # funcion principal que genera el texto por ciudad
@@ -72,7 +73,7 @@ defmodule GeneradorReporte do
 
    defp guardar_archivo(contenido) do
     #ruta en la que se guarda el reporte
-    ruta = "resources/reporte_sismos.txt"
+    ruta = "punto2/nodo-servidor/resources/reporte_sismos.txt"
 
     # reemplaza el reporte anterior o si falla la escritura, informa el error en consola
     case File.write(ruta, contenido) do

@@ -1,3 +1,4 @@
+Code.require_file("coordinador_local.exs",__DIR__)
 Code.require_file("Util.ex", __DIR__)
 alias Util
 
@@ -24,7 +25,7 @@ defmodule NodoServidor do
 
   defp procesar_mensaje(:fin), do: :fin
   defp procesar_mensaje({:reporte_ciudad, id_ciudad}), do: String.upcase("REPORTE CIUDAD #{id_ciudad}")
-  defp procesar_mensaje(:reporte_general), do: String.downcase("REPORTE GENERAL")
+  defp procesar_mensaje(:reporte_general), do: CoordinadorLocal.iniciar_reporte()
   defp procesar_mensaje(mensaje), do: "El mensaje \"#{inspect(mensaje)}\" es desconocido."
 end
 
