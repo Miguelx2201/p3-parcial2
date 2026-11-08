@@ -24,7 +24,7 @@ defmodule GeneradorReporte do
                   "Archivo movimientos: #{total_rechazos_mov}\n"
 
     # muestra el reporte en consola
-    Util.mostrar_mensaje("REPORTE POR CIUDAD----- \n")
+    Util.mostrar_mensaje("REPORTE POR CIUDAD------------------ \n")
     Util.mostrar_mensaje(texto_final)
 
     # el reporte de consola debe guardarse en resources/reporte_sismos.txt
