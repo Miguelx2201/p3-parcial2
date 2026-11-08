@@ -1,5 +1,5 @@
-# Code.require_file("Util.ex", __DIR__)
-# alias Util
+Code.require_file("Util.ex", __DIR__)
+alias Util
 
 defmodule NodoCliente do
   @nombre_servicio_local :servicio_respuesta
@@ -17,7 +17,7 @@ defmodule NodoCliente do
   ]
 
   def main() do
-    IO.puts("CLIENTE ACTIVO...")
+    Util.mostrar_mensaje("CLIENTE ACTIVO...")
 
 
     @nombre_servicio_local
@@ -35,7 +35,7 @@ defmodule NodoCliente do
   end
 
   defp iniciar_produccion(false),
-    do: IO.puts("No se pudo conectar con el nodo servidor")
+    do: Util.mostrar_mensaje("No se pudo conectar con el nodo servidor")
 
   defp iniciar_produccion(true) do
     enviar_mensajes()
@@ -56,7 +56,7 @@ defmodule NodoCliente do
         :ok
 
       respuesta ->
-        IO.puts("\t -> \"#{respuesta}\"")
+        Util.mostrar_mensaje("\t -> \"#{respuesta}\"")
         recibir_respuestas()
     end
   end
