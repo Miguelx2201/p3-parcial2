@@ -19,7 +19,7 @@ defmodule GeneradorReporte do
     texto_ciudades = generar_texto(ciudades, movs_por_ciudad)
 
     # agrega al final el total de registros rechazados, separado por archivo
-    texto_final = "\tREPORTE GENERAL:\n" <> texto_ciudades <> "\n--- Registros rechazados ---\n" <>
+    texto_final = "REPORTE GENERAL:\n" <> texto_ciudades <> "\n--- Registros rechazados ---\n" <>
                   "Archivo ciudades: #{rechazos_ciu}\n" <>
                   "Archivo movimientos: #{total_rechazos_mov}\n"
 

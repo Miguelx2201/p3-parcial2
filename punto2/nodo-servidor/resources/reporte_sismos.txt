@@ -1,4 +1,4 @@
-	REPORTE GENERAL:
+REPORTE GENERAL:
 Ciudad: Armenia | Habitantes: 304314
 Movimientos:
  - S001: Desde las 08:15:02 hasta las 08:15:18 | Magnitud: 3.4 | Profundidad: 18.0 km
