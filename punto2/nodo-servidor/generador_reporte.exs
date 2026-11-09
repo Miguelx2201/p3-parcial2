@@ -38,6 +38,7 @@ defmodule GeneradorReporte do
         "Error: La ciudad no con el id #{id} no existe."
       ciudad ->
         movs_ciudad = Enum.filter(movimientos, fn movimiento -> extraer_id(movimiento.idCiudad) == id end)
+        IO.puts("Reporte para la ciudad #{id} generado exitosamente.")
         formatear_ciudad(ciudad, movs_ciudad)
     end
 
