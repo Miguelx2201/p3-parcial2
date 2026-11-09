@@ -24,8 +24,8 @@ defmodule NodoServidor do
   end
 
   defp procesar_mensaje(:fin), do: :fin
-  defp procesar_mensaje({:reporte_ciudad, id_ciudad}), do: String.upcase("REPORTE CIUDAD #{id_ciudad}")
-  defp procesar_mensaje(:reporte_general), do: CoordinadorLocal.iniciar_reporte()
+  defp procesar_mensaje({:reporte_ciudad, id_ciudad}), do: CoordinadorLocal.iniciar_reporte_ciudad(id_ciudad)
+  defp procesar_mensaje(:reporte_general), do: CoordinadorLocal.iniciar_reporte_general()
   defp procesar_mensaje(mensaje), do: "El mensaje \"#{inspect(mensaje)}\" es desconocido."
 end
 
