@@ -56,7 +56,7 @@ defmodule NodoCliente do
         :ok
 
       respuesta ->
-        Util.mostrar_mensaje("\t -> \"#{respuesta}\"")
+        Util.mostrar_mensaje("Respuesta recibida: \n#{respuesta}")
         recibir_respuestas()
     end
   end
