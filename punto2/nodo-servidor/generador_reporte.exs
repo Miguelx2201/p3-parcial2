@@ -33,12 +33,10 @@ defmodule GeneradorReporte do
   end
 
   def generar_ciudad(ciudades, movimientos, id) do
-    #IO.puts("DEBUG FILTER: #{inspect(ciudades)} FIN DEBUG FILTER")
     case Enum.find(ciudades, fn ciudad -> extraer_id(ciudad.id) == id end) do
       nil ->
         "Error: La ciudad no con el id #{id} no existe."
       ciudad ->
-        #IO.puts("DEBUG MOVS: #{inspect(movimientos)} FIN DEBUG MOVS")
         movs_ciudad = Enum.filter(movimientos, fn movimiento -> extraer_id(movimiento.idCiudad) == id end)
         formatear_ciudad(ciudad, movs_ciudad)
     end
