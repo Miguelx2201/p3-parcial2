@@ -1,7 +1,7 @@
 Code.require_file("calculador_sismos.exs", __DIR__)
 Code.require_file("Util.ex", __DIR__)
 defmodule GeneradorReporte do
-  def generar(ciudades, movimientos, rechazos_ciu, rechazos_mov) do
+  def generar_general(ciudades, movimientos, rechazos_ciu, rechazos_mov) do
     # extrae solo los ids de las ciudades válidas para filtrar los movimientos
     ids_ciudades_validas = Enum.map(ciudades, fn c -> c.id end)
 
@@ -19,7 +19,7 @@ defmodule GeneradorReporte do
     texto_ciudades = generar_texto(ciudades, movs_por_ciudad)
 
     # agrega al final el total de registros rechazados, separado por archivo
-    texto_final = texto_ciudades <> "\n--- Registros rechazados ---\n" <>
+    texto_final = "\tREPORTE GENERAL:\n" <> texto_ciudades <> "\n--- Registros rechazados ---\n" <>
                   "Archivo ciudades: #{rechazos_ciu}\n" <>
                   "Archivo movimientos: #{total_rechazos_mov}\n"
 
@@ -31,6 +31,21 @@ defmodule GeneradorReporte do
     guardar_archivo(texto_final)
     texto_final
   end
+
+  def generar_ciudad(ciudades, movimientos, id) do
+    #IO.puts("DEBUG FILTER: #{inspect(ciudades)} FIN DEBUG FILTER")
+    case Enum.find(ciudades, fn ciudad -> extraer_id(ciudad.id) == id end) do
+      nil ->
+        "Error: La ciudad no con el id #{id} no existe."
+      ciudad ->
+        #IO.puts("DEBUG MOVS: #{inspect(movimientos)} FIN DEBUG MOVS")
+        movs_ciudad = Enum.filter(movimientos, fn movimiento -> extraer_id(movimiento.idCiudad) == id end)
+        formatear_ciudad(ciudad, movs_ciudad)
+    end
+
+  end
+
+  defp extraer_id("C" <> numero), do: String.to_integer(numero)
 
   # funcion principal que genera el texto por ciudad
   defp generar_texto(ciudades, movs_por_ciudad) do
@@ -50,7 +65,7 @@ defmodule GeneradorReporte do
     #{formatear_movimientos(movs_ciudad, total_sismos)}
     Total movimientos: #{total_sismos}
     Movimiento de mayor magnitud: #{formatear_maximo(max_sismo)}
-    Profundidad promedio: #{prom_profundidad} km\
+    Profundidad promedio: #{prom_profundidad} km
     """
   end
 
