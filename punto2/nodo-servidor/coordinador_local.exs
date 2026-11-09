@@ -6,30 +6,39 @@ Code.require_file("generador_reporte.exs", __DIR__)
 
 defmodule CoordinadorLocal do
   # inicia la lectura concurrente de los archivos
-  def iniciar_reporte do
+  def iniciar_reporte_general do
     pid_coordinador = self()
     # el spawn crea los procesos en paralelo, entonces ambos archivos se empiezan a leer al mismo tiempo
     spawn(fn -> Lector.leer_y_procesar("punto2/nodo-servidor/resources/ciudades.txt", :ciudades, Ciudad, pid_coordinador) end)
     spawn(fn -> Lector.leer_y_procesar("punto2/nodo-servidor/resources/movimientos.txt", :movimientos, Sismo, pid_coordinador) end)
     # envía un mapa vacío para guardar los resultados y no hay mensajes recibidos hasta ahora
-    esperar_respuestas(%{}, 0)
+    esperar_respuestas(:general, %{}, 0)
+  end
+
+  def iniciar_reporte_ciudad(id) do
+    pid_coordinador = self()
+
+    spawn(fn -> Lector.leer_y_procesar("punto2/nodo-servidor/resources/ciudades.txt", :ciudades, Ciudad, pid_coordinador) end)
+    spawn(fn -> Lector.leer_y_procesar("punto2/nodo-servidor/resources/movimientos.txt", :movimientos, Sismo, pid_coordinador) end)
+
+    esperar_respuestas({:ciudad, id}, %{}, 0)
   end
 
     # cuando ya se hayan recibido las 2 respuestas esperadas (de ciudades y de movimientos) se evaluan estos mismos
-  defp esperar_respuestas(resultados, 2) do
-    evaluar_resultados(resultados)
+  defp esperar_respuestas(tipo, resultados, 2) do
+    evaluar_resultados(tipo, resultados)
   end
 
-  defp esperar_respuestas(resultados, recibidos) do
+  defp esperar_respuestas(tipo, resultados, recibidos) do
     #recibe los resultados de la lectura hecha y hace una llamada recursiva con el mapa de nuevos resultados y suma 1 al contador de recibidos
     receive do
       {:resultado_lectura, archivo, resultado} ->
         nuevos_resultados = Map.put(resultados, archivo, resultado)
-        esperar_respuestas(nuevos_resultados, recibidos + 1)
+        esperar_respuestas(tipo, nuevos_resultados, recibidos + 1)
     end
   end
 
-  defp evaluar_resultados(resultados) do
+  defp evaluar_resultados(:general, resultados) do
     #extrae del mapa de resultados los valores de las llaves ciudades y movimientos
     res_ciudades = Map.get(resultados, :ciudades)
     res_mov = Map.get(resultados, :movimientos)
@@ -46,7 +55,28 @@ defmodule CoordinadorLocal do
         {:ok, ciudades, rechazos_ciu} = res_ciudades
         {:ok, movimientos, rechazos_mov} = res_mov
 
-        GeneradorReporte.generar(ciudades, movimientos, rechazos_ciu, rechazos_mov)
+        GeneradorReporte.generar_general(ciudades, movimientos, rechazos_ciu, rechazos_mov)
+    end
+  end
+
+  defp evaluar_resultados({:ciudad, id}, resultados) do
+    #si el archivo de ciudades o el de movimientos fallaron muestra error
+    res_ciudades = Map.get(resultados, :ciudades)
+    res_mov = Map.get(resultados, :movimientos)
+
+    cond do
+      #si el archivo de ciudades o el de movimientos fallaron muestra error
+      res_ciudades == :error ->
+        Util.mostrar_mensaje("Error: No se pudo leer el archivo de ciudades.")
+      res_mov == :error ->
+         Util.mostrar_mensaje("Error: No se pudo leer el archivo de movimientos sísmicos.")
+
+      true ->
+        # si ambos archivos retornaron ok se usa pattern matching para extraer los datos necesarios para generar el reporte
+        {:ok, ciudades, _rechazos} = res_ciudades
+        {:ok, movimientos, _rechazos} = res_mov
+
+        GeneradorReporte.generar_ciudad(ciudades, movimientos, id)
     end
   end
 end
