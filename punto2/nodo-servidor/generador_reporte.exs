@@ -35,7 +35,7 @@ defmodule GeneradorReporte do
   def generar_ciudad(ciudades, movimientos, id) do
     case Enum.find(ciudades, fn ciudad -> extraer_id(ciudad.id) == id end) do
       nil ->
-        "Error: La ciudad no con el id #{id} no existe."
+        "Error: La ciudad con el id #{id} no existe."
       ciudad ->
         movs_ciudad = Enum.filter(movimientos, fn movimiento -> extraer_id(movimiento.idCiudad) == id end)
         IO.puts("Reporte para la ciudad #{id} generado exitosamente.")
